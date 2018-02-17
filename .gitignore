@@ -1,0 +1,36 @@
+
+\.vs/Astral Wars/v14/
+
+\.vs/Astral Wars/v15/
+
+*.db
+
+*.user
+
+*.exe
+
+*.exp
+
+*.ilk
+
+*.lib
+
+*.pdb
+
+*.dll
+
+*.rc
+
+*.vcxproj
+
+*.opendb
+
+obj/Debug/Astral Wars\.tlog/
+
+obj/Debug/
+
+*.make
+
+*.sln
+
+*.filters
