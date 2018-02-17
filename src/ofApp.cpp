@@ -14,6 +14,7 @@ void ofApp::setup(){
     enemy_bullet_image.load("images/enemy_bullet.png");
     player_bullet_image.load("images/player_bullet.png");
     
+	intro_music.load("sounds/intro_music.wav");
     player_bullet_sound.load("sounds/player_bullet.wav");
     
     player_start.set(ofGetWidth() / 2, ofGetHeight() / 2);
@@ -58,6 +59,7 @@ void ofApp::update(){
 void ofApp::draw(){
     if (game_state == "start") {
         start_screen.draw(0, 0);
+		intro_music.play();
     } else if (game_state == "game") {
         ofBackground(0, 0, 0);
 

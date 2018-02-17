@@ -54,6 +54,7 @@ public:
 	ofImage start_screen;
 	ofImage end_screen;
 
+	ofSoundPlayer intro_music;
 	ofSoundPlayer player_bullet_sound;
 
 	ofTrueTypeFont score_font;
