@@ -14,7 +14,7 @@ void ofApp::setup(){
     enemy_bullet_image.load("images/enemy_bullet.png");
     player_bullet_image.load("images/player_bullet.png");
     
-    player_bullet_sound.load("sounds/player_bullet.mp3");
+    player_bullet_sound.load("sounds/player_bullet.wav");
     
     player_start.set(ofGetWidth() / 2, ofGetHeight() / 2);
     player_1.setup(&player_image, player_start);
