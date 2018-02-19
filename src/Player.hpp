@@ -24,7 +24,8 @@ public:
     
     bool check_canshoot();
     
-    ofImage * img;
+    ofImage* img;
+	ofSoundPlayer* laser;
 };
 
 

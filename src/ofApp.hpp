@@ -56,6 +56,7 @@ public:
 
 	ofSoundPlayer intro_music;
 	ofSoundPlayer player_bullet_sound;
+	ofSoundPlayer enemy_bullet_sound;
 
 	ofTrueTypeFont score_font;
 };

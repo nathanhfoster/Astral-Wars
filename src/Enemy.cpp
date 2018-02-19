@@ -1,6 +1,6 @@
 #include "Enemy.hpp"
 
-void Enemy::setup(bool isVisible, float max_enemy_amplitude, float max_enemy_shoot_interval, ofImage * enemy_image) {
+void Enemy::setup(bool isVisible, float max_enemy_amplitude, float max_enemy_shoot_interval, ofImage* enemy_image) {
 	this->isVisible = isVisible;
 	pos.x = ofRandom(ofGetWidth());
     pos.y = 200;
@@ -15,7 +15,6 @@ void Enemy::setup(bool isVisible, float max_enemy_amplitude, float max_enemy_sho
 void Enemy::update() {
     pos.y += amplitude * cos(ofGetElapsedTimef());
     pos.x += amplitude * sin(ofGetElapsedTimef());
-
 }
 void Enemy::draw() {
     img->draw(pos.x - width/2, pos.y - width/2);

@@ -16,12 +16,13 @@ public:
     float start_shoot;
     float shoot_interval;
     
-    void setup(bool isVisible, float max_enemy_amplitude, float max_enemy_shoot_interval, ofImage * enemy_image);
+    void setup(bool isVisible, float max_enemy_amplitude, float max_enemy_shoot_interval, ofImage* enemy_image);
     void update();
     void draw();
     bool time_to_shoot();
+
     
-    ofImage * img;
+    ofImage* img;
     int backnforth;
     float deltaX;
 	bool isVisible;

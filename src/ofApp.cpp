@@ -15,7 +15,8 @@ void ofApp::setup(){
     player_bullet_image.load("images/player_bullet.png");
     
 	intro_music.load("sounds/intro_music.wav");
-    player_bullet_sound.load("sounds/player_bullet.wav");
+    player_bullet_sound.load("sounds/laser.wav");
+	enemy_bullet_sound.load("sounds/player_bullet.wav");
     
     player_start.set(ofGetWidth() / 2, ofGetHeight() / 2);
     player_1.setup(&player_image, player_start);
@@ -38,8 +39,9 @@ void ofApp::update(){
             enemies[i].update();
             if (enemies[i].time_to_shoot()) {
                 Bullet b;
-                b.setup(false, enemies[i].pos, enemies[i].speed, &enemy_bullet_image);
+                b.setup(false, enemies[i].pos, enemies[i].speed, &enemy_bullet_image, &enemy_bullet_sound);
                 bullets.push_back(b);
+				enemy_bullet_sound.play();
             }
         }
         
@@ -94,7 +96,7 @@ void ofApp::keyPressed(int key){
             player_1.is_down_pressed = true;
         if (key == ' ') {
             Bullet b;
-            b.setup(true, player_1.pos, player_1.speed, &player_bullet_image);
+            b.setup(true, player_1.pos, player_1.speed, &player_bullet_image, &player_bullet_sound);
             bullets.push_back(b);
             player_bullet_sound.play();
         }

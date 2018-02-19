@@ -1,10 +1,11 @@
 #include "Bullet.hpp"
 
-void Bullet::setup(bool f_p, ofPoint p, float s, ofImage * bullet_image) {
+void Bullet::setup(bool f_p, ofPoint p, float s, ofImage* bullet_image, ofSoundPlayer* bullet_sound) {
     from_player = f_p;
     pos = p;
     speed = s + 3;
     img = bullet_image;
+	sound = bullet_sound;
     width = img->getWidth();
 }
 
