@@ -197,6 +197,7 @@ void ofApp::withinBounds(ofPoint* point) {
     if (point->y > ofGetWindowHeight() - p->img->getHeight()) {
         point->y = ofGetWindowHeight() - p->img->getHeight();
     }
+	delete p;
 }
 
 void ofApp::check_bullet_collisions() {
