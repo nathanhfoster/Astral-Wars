@@ -2,7 +2,7 @@
 #include "ofMain.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void ofApp::setup() {
     game_state = "start";
     score = 0;
     
@@ -16,7 +16,7 @@ void ofApp::setup(){
     
 	intro_music.load("sounds/intro_music.wav");
     player_bullet_sound.load("sounds/laser.wav");
-	enemy_bullet_sound.load("sounds/player_bullet.wav");
+	enemy_bullet_sound.load("sounds/Ror_laser.wav");
     
     player_start.set(ofGetWidth() / 2, ofGetHeight() / 2);
     player_1.setup(&player_image, player_start);
@@ -32,7 +32,7 @@ void ofApp::update(){
         
     } else if (game_state == "game") {
         player_1.update();
-        limitPlayer(&player_1.pos);
+        withinBounds(&player_1.pos);
         update_bullets();
         
         for (int i = 0; i < enemies.size(); i+=1) {
@@ -61,7 +61,7 @@ void ofApp::update(){
 void ofApp::draw(){
     if (game_state == "start") {
         start_screen.draw(0, 0);
-		intro_music.play();
+		// intro_music.play();
     } else if (game_state == "game") {
         ofBackground(0, 0, 0);
 
@@ -121,13 +121,19 @@ void ofApp::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-    
+void ofApp::mouseMoved(int x, int y ) {
+	button_last = ofPoint(x, y);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
+	ofPoint mouse_cur = ofPoint(x, y);
 
+	if (this->player_1.clickable.inside(x, y)) {
+		ofVec2f delta = (mouse_cur - button_last);
+		player_1.pos += delta;
+		button_last = mouse_cur;
+	}
 }
 
 //--------------------------------------------------------------
@@ -175,19 +181,21 @@ void ofApp::update_bullets() {
     check_bullet_collisions();
 }
 
-void ofApp::limitPlayer(ofPoint * point) {
+void ofApp::withinBounds(ofPoint* point) {
+
+	Player* p = &player_1;
     
     if (0 > point->x) {
         point->x = 0;
     }
-    if (point->x > ofGetWindowWidth()) {
-        point->x = ofGetWindowWidth();
+    if (point->x > ofGetWidth() - p->img->getWidth()) {
+        point->x = ofGetWidth() - p->img->getWidth();
     }
     if (0 > point->y) {
         point->y = 0;
     }
-    if(point->y > ofGetWindowHeight()) {
-        point->y = ofGetWindowHeight();
+    if (point->y > ofGetWindowHeight() - p->img->getHeight()) {
+        point->y = ofGetWindowHeight() - p->img->getHeight();
     }
 }
 

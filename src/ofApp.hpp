@@ -26,7 +26,7 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	void update_bullets();
-	void limitPlayer(ofPoint * point);
+	void withinBounds(ofPoint * point);
 	void check_bullet_collisions();
 	void drawLives();
 	void drawScore();
@@ -46,6 +46,7 @@ public:
 	LevelController level_controller;
 
 	ofPoint player_start;
+	ofPoint button_last;
 
 	ofImage player_image;
 	ofImage enemy_bullet_image;

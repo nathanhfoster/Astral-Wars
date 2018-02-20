@@ -21,12 +21,12 @@ void Player::update(){
         pos.x -= speed;
     if (is_right_pressed)
         pos.x += speed;
-    
 }
 
 //--------------------------------------------------------------
 void Player::draw(){
-    img->draw(pos.x - width/2,pos.y - height/2);
+    img->draw(pos);
+	clickable.set(pos, img->getWidth(), img->getHeight());
 }
 
 //--------------------------------------------------------------
