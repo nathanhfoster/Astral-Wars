@@ -25,8 +25,8 @@ void Player::update(){
 
 //--------------------------------------------------------------
 void Player::draw(){
-    img->draw(pos);
-	clickable.set(pos, img->getWidth(), img->getHeight());
+    img->draw(pos.x-width/2, pos.y-height/2);
+	clickable.set(pos.x - width / 2, pos.y - height / 2, img->getWidth(), img->getHeight());
 }
 
 //--------------------------------------------------------------

@@ -1,11 +1,14 @@
 #pragma once
 #include "ofMain.h"
+#include "Canvas.hpp"
 #include "Player.hpp"
 #include "Bullet.hpp"
 #include "Life.hpp"
 #include "Enemy.hpp"
 #include "LevelController.hpp"
 #include "uiManager.hpp"
+#include <algorithm>
+#include <vector>
 
 class ofApp : public ofBaseApp {
 
@@ -40,6 +43,7 @@ public:
 	uiManager<Enemy> UI_Enemy;
 	uiManager<Bullet> UI_Bullet;
 
+	Canvas background;
 	Player player_1;
 	vector<Bullet> bullets;
 	vector<Enemy> enemies;

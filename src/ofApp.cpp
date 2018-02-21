@@ -1,10 +1,14 @@
 #include "ofApp.hpp"
 #include "ofMain.h"
 
-//--------------------------------------------------------------
+
 void ofApp::setup() {
     game_state = "start";
     score = 0;
+
+	background.setup();
+
+	ofBackground(255, 100, 100); 
     
     max_enemy_amplitude = 3.0;
     max_enemy_shoot_interval = 1.5;
@@ -35,11 +39,11 @@ void ofApp::update(){
         withinBounds(&player_1.pos);
         update_bullets();
         
-        for (int i = 0; i < enemies.size(); i+=1) {
-            enemies[i].update();
-            if (enemies[i].time_to_shoot()) {
+		for (auto e = enemies.begin(); e != enemies.end(); ++e) {
+            e->update();
+            if (e->time_to_shoot()) {
                 Bullet b;
-                b.setup(false, enemies[i].pos, enemies[i].speed, &enemy_bullet_image, &enemy_bullet_sound);
+                b.setup(false, e->pos, e->speed, &enemy_bullet_image, &enemy_bullet_sound);
                 bullets.push_back(b);
 				enemy_bullet_sound.play();
             }
@@ -51,7 +55,7 @@ void ofApp::update(){
             enemies.push_back(e);
 			//UI_Enemy.addItem(e);
         }
-    } else if (game_state == "end") {
+    } else if (game_state == "end") { 
         
     }
                
@@ -63,7 +67,10 @@ void ofApp::draw(){
         start_screen.draw(0, 0);
 		// intro_music.play();
     } else if (game_state == "game") {
-        ofBackground(0, 0, 0);
+		//ofEnableAlphaBlending();
+		background.draw();
+		//ofDisableAlphaBlending();
+
 
 		for (auto it = enemies.begin(); it != enemies .end(); ++it) {
 			if (it->isVisible) 
@@ -73,7 +80,6 @@ void ofApp::draw(){
 		for (auto it = bullets.begin(); it != bullets.end(); ++it) {
 			it->draw();
 		}
-        
         player_1.draw();
         
         drawScore();
@@ -89,7 +95,7 @@ void ofApp::keyPressed(int key){
         if (key == OF_KEY_LEFT)
             player_1.is_left_pressed = true;
         if (key == OF_KEY_RIGHT)
-            player_1.is_right_pressed = true;
+            player_1.is_right_pressed = true; 
         if (key == OF_KEY_UP)
             player_1.is_up_pressed = true;
         if (key == OF_KEY_DOWN)
@@ -200,7 +206,7 @@ void ofApp::withinBounds(ofPoint* point) {
 }
 
 void ofApp::check_bullet_collisions() {
-    for (int i = 0; i < bullets.size(); i++) {
+    for (size_t i = 0; i < bullets.size(); i++) {
         if (bullets[i].from_player) {
             for (int e = enemies.size()-1; e >= 0; e--) {
                 if (ofDist(bullets[i].pos.x, bullets[i].pos.y, enemies[e].pos.x, enemies[e].pos.y) < (enemies[e].width + bullets[i].width)/2) {
@@ -239,4 +245,12 @@ void ofApp::drawScore() {
 
 void ofApp::resetGame() {
     
+}
+
+template <typename T>
+void remove(vector<T>& vec, size_t pos)
+{
+	std::vector<T>::iterator it = vec.begin();
+	std::advance(it, pos);
+	vec.erase(it);
 }
