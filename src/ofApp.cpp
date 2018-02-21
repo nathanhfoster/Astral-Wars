@@ -178,10 +178,10 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::update_bullets() {
-    for (int i = 0; i < bullets.size(); i+=1) {
-        bullets[i].update();
-        if (bullets[i].pos.y - bullets[i].width/2 < 0 || bullets[i].pos.y + bullets[i].width/2 > ofGetHeight()) {
-            bullets.erase(bullets.begin() + i);
+    for (auto b = bullets.begin(); b != bullets.end(); ++b) {
+        b->update();
+        if (b->pos.y - b->width/2 < 0 || b->pos.y + b->width/2 > ofGetHeight()) {
+            b = bullets.erase(b);
         }
     }
     check_bullet_collisions();
