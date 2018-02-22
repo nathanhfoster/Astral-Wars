@@ -1,14 +1,13 @@
 #include "ofApp.hpp"
 #include "ofMain.h"
 
-
 void ofApp::setup() {
     game_state = "start";
     score = 0;
 
 	background.setup();
 
-	ofBackground(255, 100, 100); 
+	ofBackground(255, 255, 255); 
     
     max_enemy_amplitude = 3.0;
     max_enemy_shoot_interval = 1.5;
@@ -178,47 +177,46 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::update_bullets() {
-    for (auto b = bullets.begin(); b != bullets.end(); ++b) {
+    for (auto b = bullets.begin(); b != bullets.end(); ) {
         b->update();
-        if (b->pos.y - b->width/2 < 0 || b->pos.y + b->width/2 > ofGetHeight()) {
-            b = bullets.erase(b);
-        }
+		if (b->pos.y - b->width / 2 < 0 || b->pos.y + b->width / 2 > ofGetHeight()) {
+			b = bullets.erase(b);
+		}
+		else
+			b++;
     }
     check_bullet_collisions();
 }
 
 void ofApp::withinBounds(ofPoint* point) {
-
-	Player* p = &player_1;
     
     if (0 > point->x) {
         point->x = 0;
     }
-    if (point->x > ofGetWidth() - p->img->getWidth()) {
-        point->x = ofGetWidth() - p->img->getWidth();
+    if (point->x > ofGetWidth()) {
+        point->x = ofGetWidth();
     }
     if (0 > point->y) {
         point->y = 0;
     }
-    if (point->y > ofGetWindowHeight() - p->img->getHeight()) {
-        point->y = ofGetWindowHeight() - p->img->getHeight();
+    if (point->y > ofGetWindowHeight()) {
+        point->y = ofGetWindowHeight();
     }
-	delete p;
 }
 
 void ofApp::check_bullet_collisions() {
-    for (size_t i = 0; i < bullets.size(); i++) {
-        if (bullets[i].from_player) {
-            for (int e = enemies.size()-1; e >= 0; e--) {
-                if (ofDist(bullets[i].pos.x, bullets[i].pos.y, enemies[e].pos.x, enemies[e].pos.y) < (enemies[e].width + bullets[i].width)/2) {
-                    enemies.erase(enemies.begin()+e);
-                    bullets.erase(bullets.begin()+i);
+    for (auto b = bullets.begin(); b != bullets.end(); b++) {
+        if (b->from_player) {
+            for (auto e = enemies.end()-1; e != enemies.begin(); e--) {
+                if (ofDist(b->pos.x, b->pos.y, e->pos.x, e->pos.y) < (e->width + b->width)/2) {
+                    e = enemies.erase(e);
+                    b = bullets.erase(b);
                     score+=10;
                 }
             }
         } else {
-            if (ofDist(bullets[i].pos.x, bullets[i].pos.y, player_1.pos.x, player_1.pos.y) < (bullets[i].width+player_1.width)/2) {
-                bullets.erase(bullets.begin()+i);
+            if (ofDist(b->pos.x, b->pos.y, player_1.pos.x, player_1.pos.y) < (b->width+player_1.width)/2) {
+                b = bullets.erase(b);
                 player_1.lives--;
                 
                 if (player_1.lives <= 0) {
@@ -246,12 +244,4 @@ void ofApp::drawScore() {
 
 void ofApp::resetGame() {
     
-}
-
-template <typename T>
-void remove(vector<T>& vec, size_t pos)
-{
-	std::vector<T>::iterator it = vec.begin();
-	std::advance(it, pos);
-	vec.erase(it);
 }
