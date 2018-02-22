@@ -7,7 +7,7 @@ void ofApp::setup() {
 
 	background.setup();
 
-	ofBackground(255, 255, 255); 
+	ofBackground(0, 0, 0); 
     
     max_enemy_amplitude = 3.0;
     max_enemy_shoot_interval = 1.5;
@@ -205,7 +205,7 @@ void ofApp::withinBounds(ofPoint* point) {
 }
 
 void ofApp::check_bullet_collisions() {
-    for (auto b = bullets.begin(); b != bullets.end(); b++) {
+    for (auto b = bullets.begin(); b != bullets.end(); ++b) {
         if (b->from_player) {
             for (auto e = enemies.end()-1; e != enemies.begin(); e--) {
                 if (ofDist(b->pos.x, b->pos.y, e->pos.x, e->pos.y) < (e->width + b->width)/2) {
