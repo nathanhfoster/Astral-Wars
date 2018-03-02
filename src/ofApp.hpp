@@ -2,13 +2,12 @@
 #include "ofMain.h"
 #include "Canvas.hpp"
 #include "Player.hpp"
-#include "Bullet.hpp"
-#include "Life.hpp"
-#include "Enemy.hpp"
 #include "LevelController.hpp"
 #include "uiManager.hpp"
 #include <algorithm>
 #include <vector>
+
+class Emitter;
 
 class ofApp : public ofBaseApp {
 
@@ -16,6 +15,7 @@ public:
 	void setup();
 	void update();
 	void draw();
+	void checkCollisions();
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -40,13 +40,13 @@ public:
 	float max_enemy_amplitude;
 	float max_enemy_shoot_interval;
 
-	uiManager<Enemy> UI_Enemy;
-	uiManager<Bullet> UI_Bullet;
+
+	Emitter *player_1Gun, *invaders, *invaderGun;
+	float gameStartTime;
+	ofVec3f mouseLast;
 
 	Canvas background;
 	Player player_1;
-	vector<Bullet> bullets;
-	vector<Enemy> enemies;
 	LevelController level_controller;
 
 	ofPoint player_start;
@@ -56,6 +56,7 @@ public:
 	ofImage enemy_bullet_image;
 	ofImage player_bullet_image;
 	ofImage enemy_image;
+	ofImage invader_emitter_image;
 	ofImage start_screen;
 	ofImage end_screen;
 
