@@ -15,7 +15,9 @@ void ofApp::setup() {
 
 	intro_music.load("sounds/intro_music.wav");
 	player_bullet_sound.load("sounds/laser.wav");
+	player_bullet_sound.setMultiPlay(true);
 	enemy_bullet_sound.load("sounds/Ror_laser.wav");
+	
 
 	player_start.set(ofGetWidth() / 2, ofGetHeight() / 2);
 	player_1.setup(&player_image, player_start);
@@ -32,7 +34,6 @@ void ofApp::setup() {
 	// so with that you can get an idea of velocity/rate effects.
 	//
 	player_1Gun = new Emitter(new SpriteSystem());
-	invaderGun = new Emitter(new SpriteSystem());
 		// Set up some reasonable parameters for the gun/missile launcher
 	// Remember that "Y" decreases as we move toward teh top of the 
 	// window, so we set a negative velocity of -1000;
@@ -41,18 +42,14 @@ void ofApp::setup() {
 	//
 	player_1Gun->setPosition(ofPoint(player_1.pos));
 	player_1Gun->setVelocity(ofVec3f(0, -1000, 0));
-	player_1Gun->setRate(3);
-	player_1Gun->setLifespan(500);
+	player_1Gun->setRate(1);
+	player_1Gun->setLifespan(1000);
 	player_1Gun->setChildImage(player_bullet_image);
 	player_1Gun->setChildSound(player_bullet_sound);
 
 	invaders = new Emitter(new SpriteSystem());
 	invaders->setImage(invader_emitter_image);
 	invaders->setChildImage(enemy_image);
-
-
-
-
 
 	// Set up some reasonable parameters for the invader spirtes
 	// Remember that "Y" decreases as we move toward the bottom of
@@ -61,11 +58,35 @@ void ofApp::setup() {
 	// a lifespan of 5000 ms.  they are traveling much slower
 	// than the missiles, so they need to live longer
 	//
-	invaders->setPosition(ofVec3f(ofGetWindowWidth() / 2, 10, 0));
+	invaders->setPosition(ofVec3f(ofGetWindowWidth() / 2, 50, 0));
 	invaders->velocity.set(0, 400, 0);
 	invaders->setLifespan(5000);
-	invaders->setRate(2);
+	invaders->setRate(1);
 	invaders->setChildSize(20, 20);
+
+
+	moreInvaders = new Emitter(new SpriteSystem());
+
+	moreInvaders->setImage(invader_emitter_image);
+	moreInvaders->setChildImage(enemy_image);
+	moreInvaders->setPosition(ofVec3f(ofGetWindowWidth() / 2, 200, 0));
+	moreInvaders->velocity.set(0, 600, 0);
+	moreInvaders->setRate(10);
+	moreInvaders->setLifespan(5000);
+	moreInvaders->setChildSize(20, 20);
+	moreInvaders->start();
+
+
+	explosion = new ParticleEmitter();
+	explosion->setDamping(1);
+
+	explosion->setOneShot(true);
+	explosion->setEmitterType(RadialEmitter);
+	explosion->setGroupSize(10);
+	explosion->setLifespan(1);
+	explosion->setVelocity(ofVec3f(1000, 0, 0));
+	explosion->setParticleRadius(4);
+
 
 	// start them up
 
@@ -87,10 +108,13 @@ void ofApp::update(){
 		player_1Gun->update();
 		player_1Gun->setPosition(ofPoint(player_1.pos));
 		invaders->update();
+		if (score > 200)
+			moreInvaders->update();
 
 	// check for collisions between missles and invaders
 	//  
 	checkCollisions();
+	explosion->update();
 
 	// we will randomize initial velocity so that not the invaders
 	// are going at the same speed just to make it a little harder/interesting
@@ -98,6 +122,8 @@ void ofApp::update(){
 	//
 	ofVec3f v = invaders->velocity;
 	invaders->setVelocity(ofVec3f(ofRandom(-v.y /2, v.y /2), v.y, v.z));
+	moreInvaders->setVelocity(ofVec3f(ofRandom(-v.y / 2, v.y / 2), v.y, v.z));
+	
 
 	// game runs for 20 seconds; check to see if over and stop
 	// emitters.  We are computing in milleseconds so we need
@@ -110,8 +136,22 @@ void ofApp::update(){
 		invaders->stop();
 	}*/
 
-		player_1.update();
-        withinBounds(&player_1.pos);
+	if (score > 5) { invaders->setRate(2); player_1Gun->setRate(2); }
+	if (score > 10) { invaders->setRate(3); }
+	if (score > 20) { invaders->setRate(4); player_1Gun->setRate(3);}
+	if (score > 30) { invaders->setRate(5); }
+	if (score > 40) { invaders->setRate(6); player_1Gun->setRate(4); }
+	if (score > 50) { invaders->setRate(7); }
+	if (score > 60) { invaders->setRate(8); }
+	if (score > 70) { invaders->setRate(9); player_1Gun->setRate(5); }
+	if (score > 80) { invaders->setRate(10); }
+	if (score > 90) { invaders->setRate(11); }
+	if (score > 100) { invaders->setRate(12); player_1Gun->setRate(6); }
+	if (score > 200) { invaders->setRate(14); player_1Gun->setRate(7); }
+	
+		
+	player_1.update();
+    withinBounds(&player_1.pos);
     } else if (game_state == "end") { 
         
     }
@@ -126,13 +166,15 @@ void ofApp::draw(){
     } else if (game_state == "game") {
 		player_1Gun->draw();
 		invaders->draw();
+		if (score > 200)
+			moreInvaders->draw();
 		//ofEnableAlphaBlending();
 		//background.draw();
 		//ofDisableAlphaBlending();
 
-
         player_1.draw();
-        
+		explosion->draw();
+		
         drawScore();
         drawLives();
     } else if (game_state == "end") {
@@ -149,13 +191,34 @@ void ofApp::checkCollisions() {
 	// detect a collision when we are within that distance.
 	//
 	float collisionDist = player_1Gun->childHeight / 2 + invaders->childHeight / 2;
+	float nearPlayer = player_1.img->getHeight() / 2 + invaders->childHeight / 2;
+	float nearPlayer2 = player_1.img->getHeight() / 2 + moreInvaders->childHeight / 2;
+	vector<Sprite>::iterator i = invaders->sys->sprites.begin();
+
 
 	// Loop through all the missiles, then remove any invaders that are within
 	// "collisionDist" of the missiles.  the removeNear() function returns the
 	// number of missiles removed.
 	//
 	for (auto g = player_1Gun->sys->sprites.begin(); g != player_1Gun->sys->sprites.end(); ++g) {
-		score += invaders->sys->removeNear(g->trans, collisionDist);
+		int n = invaders->sys->removeNear(g->trans, collisionDist) + moreInvaders->sys->removeNear(g->trans, collisionDist);
+		if (n > 0) {
+			score += n;
+			explosion->setPosition(g->trans);
+			explosion->start();
+		}
+	}
+
+	for (int i = 0; i < invaders->sys->sprites.size(); i++) {
+		int n = invaders->sys->removeNear(player_1.pos, nearPlayer) + moreInvaders->sys->removeNear(player_1.pos, nearPlayer2);
+		if (n > 0) {
+			player_1.lives -= n;
+			explosion->setPosition(player_1.pos);
+			explosion->start();
+		}
+		if (player_1.lives == 0) {
+			game_state = "end";
+		}
 	}
 }
 
@@ -175,6 +238,7 @@ void ofApp::keyPressed(int key){
             b.setup(true, player_1.pos, player_1.speed, &player_bullet_image, &player_bullet_sound);
             bullets.push_back(b);
             player_bullet_sound.play();*/
+			
         }
     }
 }
@@ -280,4 +344,16 @@ void ofApp::drawScore() {
 
 void ofApp::resetGame() {
     
+}
+
+bool ofApp::isPerfectSquare(int x) {
+	int s = sqrt(x);
+	return (s*s == x);
+}
+
+bool ofApp::isFibonacci(int n) {
+	// n is Fibinacci if one of 5*n*n + 4 or 5*n*n - 4 or both
+	// is a perferct square
+	return isPerfectSquare(5 * n*n + 4) ||
+		isPerfectSquare(5 * n*n - 4);
 }

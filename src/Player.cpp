@@ -7,7 +7,7 @@ void Player::setup(ofImage * _img, ofPoint _pos){
     height = img->getHeight();
     width = img->getWidth();
     pos.set(_pos);
-    speed = 2;
+    speed = 1;
     lives = 5;
 }
 

@@ -33,8 +33,8 @@ void Emitter::draw() {
 			image.draw(-image.getWidth() / 2.0 + trans.x, -image.getHeight() / 2.0 + trans.y);
 		}
 		else {
-			ofSetColor(0, 0, 255);
-			ofDrawRectangle(-width / 2 + trans.x, -height / 2 + trans.y, width, height);
+			//ofSetColor(0, 0, 255);
+			//ofDrawRectangle(-width / 2 + trans.x, -height / 2 + trans.y, width, height);
 		}
 	}
 

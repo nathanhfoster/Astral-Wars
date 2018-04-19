@@ -14,7 +14,7 @@ public:
     float width, height, speed;
     int lives;
     
-	bool is_left_pressed, is_right_pressed, is_down_pressed, is_up_pressed;
+	bool is_left_pressed, is_right_pressed, is_down_pressed, is_up_pressed, hit;
     
     void setup(ofImage* _img, ofPoint _pos);
     void update();

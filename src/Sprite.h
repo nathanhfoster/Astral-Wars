@@ -7,6 +7,7 @@
 //  Kevin M. Smith - CS 134 SJSU
 
 #include "ofMain.h"
+#include "ParticleEmitter.h"
 
 // This is a base object that all drawable object inherit from
 // It is possible this will be replaced by ofNode when we move to 3D
@@ -51,4 +52,6 @@ public:
 	int removeNear(ofVec3f point, float dist);
 	void draw();
 	vector<Sprite> sprites;
+	ParticleEmitter* explosion;
+	
 };

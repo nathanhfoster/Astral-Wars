@@ -4,6 +4,7 @@
 #include "Player.hpp"
 #include "LevelController.hpp"
 #include "uiManager.hpp"
+#include "ParticleEmitter.h"
 #include <algorithm>
 #include <vector>
 
@@ -34,6 +35,8 @@ public:
 	void drawLives();
 	void drawScore();
 	void resetGame();
+	bool isPerfectSquare(int x);
+	bool isFibonacci(int n);
 
 	string game_state;
 	int score;
@@ -41,7 +44,8 @@ public:
 	float max_enemy_shoot_interval;
 
 
-	Emitter *player_1Gun, *invaders, *invaderGun;
+	Emitter *player_1Gun, *invaders, *moreInvaders;
+	ParticleEmitter* explosion;
 	float gameStartTime;
 	ofVec3f mouseLast;
 
